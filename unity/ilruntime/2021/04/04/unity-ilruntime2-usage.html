@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ILRuntime爬坑笔记2——使用篇</title>
+  <meta name="description" content="这篇文章主要介绍ILRuntime大致的实现原理，和使用过程中碰到的坑，2019年那会用的ILRuntime版本是1.4和1.6中间的某个master分支上的节点，新版本应该有不少变化。">
+  
+  <meta name="author" content="SleepyHippo">
+  <meta name="copyright" content="&copy; SleepyHippo 2021">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="这篇文章主要介绍ILRuntime大致的实现原理，和使用过程中碰到的坑，2019年那会用的ILRuntime版本是1.4和1.6中间的某个master分支上的节点，新版本应该有不少变化。" />
+  <meta property="og:url" content="/unity/ilruntime/2021/04/04/unity-ilruntime2-usage.html">
+  <meta property="og:site_name" content="SleepyHippo's blog" />
+  <meta property="og:title" content="ILRuntime爬坑笔记2——使用篇" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ILRuntime爬坑笔记2——使用篇">
+  <meta name="twitter:description" content="这篇文章主要介绍ILRuntime大致的实现原理，和使用过程中碰到的坑，2019年那会用的ILRuntime版本是1.4和1.6中间的某个master分支上的节点，新版本应该有不少变化。">
+  <meta name="twitter:image" content="/assets/logo.png">
+  <meta name="twitter:url" content="/unity/ilruntime/2021/04/04/unity-ilruntime2-usage.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="/unity/ilruntime/2021/04/04/unity-ilruntime2-usage.html">
+	<link rel="alternate" type="application/rss+xml" title="SleepyHippo's blog" href="/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.png" alt="SleepyHippo's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">ILRuntime爬坑笔记2——使用篇</h1>
+      <p class="info">by <strong></strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">April 4, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/Unity">Unity</a>, 
+    
+  
+    
+    <a href="/category/ILRuntime">Ilruntime</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <p>这篇文章主要介绍ILRuntime大致的实现原理，和使用过程中碰到的坑，2019年那会用的ILRuntime版本是1.4和1.6中间的某个master分支上的节点，新版本应该有不少变化。</p>
+
+<h2 id="实现原理"><strong>实现原理</strong></h2>
+
+<h3 id="基本工作流程是怎么样的">基本工作流程是怎么样的？</h3>
+<ul>
+  <li>启动游戏后，下载dll（CIL字节码），调用方法加载dll。</li>
+  <li>主工程可以用ILR提供的两种方式来调用热更代码：
+    <ol>
+      <li>appdomain.Invoke(“Hotfix.Game”, “Initialize”, null, null); 调用热更工程的静态方法</li>
+      <li>也可以用<a href="https://ourpalm.github.io/ILRuntime/public/v1/guide/reflection.html">反射</a>创建热更中定义的类型的实例对象，并调用实例方法。</li>
+    </ol>
+  </li>
+  <li>热更工程则可以用正常的C#方式直接调用主工程的代码。</li>
+</ul>
+
+<h3 id="主工程是怎么调用热更工程的代码的">主工程是怎么调用热更工程的代码的？</h3>
+<ul>
+  <li>主工程是不能直接调用热更代码的（比如直接new对象，直接调用静态方法），能调用的，其实都是ILR的框架代码，ILR的框架代码把主工程调用时传递的参数，转换为解释执行某段热更代码。</li>
+  <li>热更代码是通过解释器来执行的，其中定义的类型，创建的对象，变量等，在主工程的视角来看，全部都是不存在的，主工程视角看起来，热更中的类型是ILType对象、方法是ILMethod对象、对象是StackObject对象。</li>
+</ul>
+
+<h3 id="热更工程代码为什么能调用主工程代码">热更工程代码为什么能调用主工程代码？</h3>
+<ul>
+  <li>主工程定义了一个方法mainFun(int x)，有两种方式能被调用，一种是直接在代码里写mainFunc(1)来调用，另一种是反射。这也对应了热更工程调用主工程的两种实现方式。</li>
+  <li>一种就是，解释器解释ILR代码后，最终通过反射调用指定的主工程代码，在热更的入口方法里，随意调用一个主工程的函数，在主工程函数里Debug.Log一下，就可以看到完整的调用堆栈</li>
+  <li>另一种则是，所谓的<a href="https://ourpalm.github.io/ILRuntime/public/v1/guide/bind.html">CLR绑定</a>的方式，就是对一些主工程经常被调用的方法生成绑定代码，绑定代码分为两部分，一部分在运行时提前用反射拿到要绑定方法的MethodBase，作为字典的key存下来，另一部分则是一个包装方法，内部调用了绑定方法，用ILR的方式处理参数和返回值，这个包装方法会作为字典的value存下来。当ILR检测到热更代码要调用这些主工程代码的时候，就查找字典，改为调用包装方法，从而避开反射的开销。官方有提供Binding的自动生成。并建议只有经常调用的方法，才写Binding。这种提升性能的方式和<a href="http://blogs.msmvps.com/jonskeet/2008/08/09/making-reflection-fly-and-exploring-delegates/">这篇文章</a>的思路是一致的</li>
+  <li>还有一些比较特殊的方法，例如Activator.CreateInstance、Type.GetType、MethodBase.Invoke，需要用特殊的方法处理才能在热更工程中调用，这些在ILR框架内使用<a href="https://ourpalm.github.io/ILRuntime/public/v1/guide/bind.html">CLR重定向</a>的方法做了处理，上面说的CLR绑定也是基于CLR重定向的机制实现的。</li>
+</ul>
+
+<h3 id="热更工程的类为什么可以继承主工程的类">热更工程的类为什么可以继承主工程的类？</h3>
+<ul>
+  <li>因为热更工程中定义的class subHot，在运行时是不存在的，所以需要定义一个<a href="https://ourpalm.github.io/ILRuntime/public/v1/guide/cross-domain.html">Adapter</a>来继承主工程的class baseMain，在热更工程里写new subHot()，ILRuntime内部会最后转换成new Adapter()，在调用具体方法的时候，再转去调用subHot的逻辑</li>
+</ul>
+
+<h2 id="各种东西怎么实现的"><strong>各种东西怎么实现的？</strong></h2>
+<ul>
+  <li>MonoBehavior：
+    <ul>
+      <li>热更工程不方便定义新的MonoBehavior，引用UI控件可以有两种方式，一种是Find之后GetComponent，一种是使用一个通用的MonoBehavior定义<code class="language-plaintext highlighter-rouge">List&lt;UnityEngine.Object&gt;</code>来保存，我们选择第二种方式，更加灵活一点。</li>
+    </ul>
+  </li>
+  <li>协议序列化、数据组件、显示管理器等：
+    <ul>
+      <li>可以复用主工程的基类，如果主工程是泛型类，就把基类拷贝到热更工程中。</li>
+    </ul>
+  </li>
+  <li>配置表：
+    <ul>
+      <li>主工程每张表是用一个SO来存储，热更工程没办法新建SO，所以改成和服务器端一样，运行时用CSV方式读取。</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="使用中遇到的问题"><strong>使用中遇到的问题</strong></h2>
+
+<h3 id="adapter">Adapter</h3>
+<ul>
+  <li>Adapter可以自动生成！但是生成的工具build不出来。。github上说工具已经没人维护了。。</li>
+  <li>手写的话，记得给参数赋值！</li>
+  <li>如果不带参数，直接传null，不然有gc</li>
+  <li>属性adapter是当作方法来调用的，方法名是属性名前面加”get_“，参数不要填！（官方Demo是错的）</li>
+  <li>一定需要一个无参构造函数，目前没想到方法能在构造函数里传参，如果有基类构造函数需要参数，子类构造函数先传空给基类，再开别的方法来赋值</li>
+  <li>没办法继承泛型基类（除非基类中的T是具体类型）</li>
+  <li>在热更工程中调用基类的方法，有时候会有问题导致Unity卡死，解决方法是加上base或this的前缀来调用，还需要用更精确的例子来确认原因</li>
+</ul>
+
+<h3 id="泛型">泛型</h3>
+<ul>
+  <li>热更工程如果使用了没有在主工程中直接使用过的泛型类或泛型方法，在IL2CPP平台会在运行时出现问题
+    <ul>
+      <li>比如：<code class="language-plaintext highlighter-rouge">TemplateClass&lt;T&gt;</code>和MainClass都是主工程的类，主工程没有用过<code class="language-plaintext highlighter-rouge">TemplateClass&lt;MainClass&gt;</code>，在热更工程里写<code class="language-plaintext highlighter-rouge">TemplateClass&lt;TMainClass&gt;</code>运行时就会报错。真想这么用的话可以在主工程中写一个方法，在里面定义几个热更要用的泛型实例的局部变量。</li>
+      <li>泛型方法也一样</li>
+      <li>使用主工程的泛型类，T使用热更中的类型也是不行的</li>
+    </ul>
+  </li>
+  <li>热更工程定义泛型基类继承主工程是不行的：<code class="language-plaintext highlighter-rouge">HotfixSub&lt;T&gt; : MainBase&lt;T&gt;</code></li>
+  <li>热更工程定义普通类继承主工程泛型基类是可以的：<code class="language-plaintext highlighter-rouge">HotfixSub ： MainBase&lt;GGUIMonoCommonTab&gt;</code></li>
+  <li>参考<a href="https://ourpalm.github.io/ILRuntime/public/v1/guide/il2cpp.html">官网泛型</a>的说明</li>
+</ul>
+
+<h3 id="委托">委托</h3>
+<ul>
+  <li>如果主工程要要用到热更中定义的委托，比如List.Find、List.Sort，参数如果是委托，需要增加<a href="https://ourpalm.github.io/ILRuntime/public/v1/guide/delegate.html">委托适配器</a>，这个会导致代码无法热更，如果业务一定需要热更，就要换一些写法</li>
+</ul>
+
+<h3 id="死循环">死循环</h3>
+<ul>
+  <li>打印协议log，因为ILR里的协议结构体本身会循环引用，没处理好就会导致死循环</li>
+  <li>在单例的构造函数里，调用了ILR里的函数，ILR里又调了这个单例，因为单例还没有赋值，就会导致死循环（不过这个问题和ILRuntime无关= =）</li>
+  <li>查找在哪里死循环的方式：开调试，触发死循环，按中断，看堆栈</li>
+</ul>
+
+<h3 id="禁止的用法">禁止的用法</h3>
+<ul>
+  <li>主工程不能使用热更dll中的类型，主工程中的泛型类不能使用热更中的类型当做类型参数（很重要）
+    <ul>
+      <li>解决方法是代码拷贝一份，namespace改成不一样的</li>
+    </ul>
+  </li>
+  <li>不能继承MonoBehaviour</li>
+  <li>enum.Parse不能用
+    <ul>
+      <li>EXXXFactory，手写switch case判断（之后可以增加自动生成）</li>
+    </ul>
+  </li>
+  <li>volatile关键字不支持（单例不能用这个）
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">System.Collections.Generic.KeyNotFoundException: Cannot find Type:MG.Hotfix.Model modreq(System.Runtime.CompilerServices.IsVolatile)</code></li>
+    </ul>
+  </li>
+  <li>热更类不要同时继承多个主工程接口
+    <ul>
+      <li>先创建新接口，再继承</li>
+    </ul>
+  </li>
+  <li>热更类不能同时继承主工程的类和接口</li>
+  <li>热更类继承了主工程的类或接口时，不要再继承热更工程的接口</li>
+  <li>Dictionary的TryGetValue，如果out是struct或者值类型变量，可能会有错误</li>
+  <li>List需要Sort的话，Sort的函数参数都用object，不然有可能需要写RegisterFunctionDelegate，但是如果要热更，就不能加这些</li>
+</ul>
+
+<h3 id="其他">其他</h3>
+<ul>
+  <li>调用了某个方法，但是结果错误，基本都是Adapter没写对</li>
+  <li>工程不会自动导入从外部新增加的文件（比如协议文件）
+    <ul>
+      <li>手动修改csproj文件，改为通配符模式，并忽略几个文件夹，如：</li>
+    </ul>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ItemGroup&gt;
+    &lt;Compile Include="**\*.cs" /&gt;
+    &lt;Compile Remove="bin\**" /&gt;
+&lt;/ItemGroup&gt;
+</code></pre></div>    </div>
+
+    <ul>
+      <li>如果使用vs开发
+        <ul>
+          <li>某些操作会让vs强行重新生成.csproj，目前发现的有
+            <ul>
+              <li>删除文件</li>
+            </ul>
+          </li>
+          <li>外部新增文件时，VS不会自动刷新，可以用alt+f+j+1来重新打开解决方案</li>
+          <li>所以如果被vs修改了.csproj，记得在git上重置掉，不要提交！</li>
+          <li><a href="https://docs.gitlab.com/ee/user/project/file_lock.html">gitlab有锁定文件的功能！</a>但是。。19刀/人月。。</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>热更工程的枚举，在解释器里，是使用int来替代的，equals这种，就调用不到enum的equals实现，可以干脆直接用类里的const替代</li>
+  <li>IOS（或Android使用IL2CPP）需要使用link.xml来阻值代码裁剪</li>
+</ul>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv"></span>次访问</span>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+      <a href="//twitter.com/share?text=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%E7%AF%87&url=%2Funity%2Filruntime%2F2021%2F04%2F04%2Funity-ilruntime2-usage.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%E7%AF%87&u=%2Funity%2Filruntime%2F2021%2F04%2F04%2Funity-ilruntime2-usage.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%E7%AF%87&url=%2Funity%2Filruntime%2F2021%2F04%2F04%2Funity-ilruntime2-usage.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%E7%AF%87&url=%2Funity%2Filruntime%2F2021%2F04%2F04%2Funity-ilruntime2-usage.html&media=/assets/header_image.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('/unity/ilruntime/2021/04/04/unity-ilruntime2-usage.html') + '&title=ILRuntime爬坑笔记2——使用篇'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">SleepyHippo's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:zkchippo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">zkchippo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://github.com/SleepyHippo" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">SleepyHippo</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

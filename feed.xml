@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SleepyHippo's blog</title>
+    <description></description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 05 Apr 2021 10:29:14 +0800</pubDate>
+    <lastBuildDate>Mon, 05 Apr 2021 10:29:14 +0800</lastBuildDate>
+    <generator>Jekyll v3.9.0</generator>
+    
+      <item>
+        <title>ILRuntime爬坑笔记2——使用篇</title>
+        <description>&lt;p&gt;这篇文章主要介绍ILRuntime大致的实现原理，和使用过程中碰到的坑，2019年那会用的ILRuntime版本是1.4和1.6中间的某个master分支上的节点，新版本应该有不少变化。&lt;/p&gt; &lt;h2 id=&quot;实现原理&quot;&gt;&lt;strong&gt;实现原理&lt;/strong&gt;&lt;/h2&gt; &lt;h3 id=&quot;基本工作流程是怎么样的&quot;&gt;基本工作流程是怎么样的？&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;启动游戏后，下载dll（CIL字节码），调用方法加载dll。&lt;/li&gt; &lt;li&gt;主工程可以用ILR提供的两种方式来调用热更代码： &lt;ol&gt; &lt;li&gt;appdomain.Invoke(“Hotfix.Game”, “Initialize”, null, null); 调用热更工程的静态方法&lt;/li&gt; &lt;li&gt;也可以用&lt;a href=&quot;https://ourpalm.github.io/ILRuntime/public/v1/guide/reflection.html&quot;&gt;反射&lt;/a&gt;创建热更中定义的类型的实例对象，并调用实例方法。&lt;/li&gt; &lt;/ol&gt; &lt;/li&gt; &lt;li&gt;热更工程则可以用正常的C#方式直接调用主工程的代码。&lt;/li&gt; &lt;/ul&gt; &lt;h3 id=&quot;主工程是怎么调用热更工程的代码的&quot;&gt;主工程是怎么调用热更工程的代码的？&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;主工程是不能直接调用热更代码的（比如直接new对象，直接调用静态方法），能调用的，其实都是ILR的框架代码，ILR的框架代码把主工程调用时传递的参数，转换为解释执行某段热更代码。&lt;/li&gt; &lt;li&gt;热更代码是通过解释器来执行的，其中定义的类型，创建的对象，变量等，在主工程的视角来看，全部都是不存在的，主工程视角看起来，热更中的类型是ILType对象、方法是ILMethod对象、对象是StackObject对象。&lt;/li&gt; &lt;/ul&gt; &lt;h3 id=&quot;热更工程代码为什么能调用主工程代码&quot;&gt;热更工程代码为什么能调用主工程代码？&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;主工程定义了一个方法mainFun(int...</description>
+        <pubDate>Sun, 04 Apr 2021 18:04:45 +0800</pubDate>
+        <link>/unity/ilruntime/2021/04/04/unity-ilruntime2-usage.html</link>
+        <guid isPermaLink="true">/unity/ilruntime/2021/04/04/unity-ilruntime2-usage.html</guid>
+        
+        
+        <category>Unity</category>
+        
+        <category>ILRuntime</category>
+        
+      </item>
+    
+      <item>
+        <title>ILRuntime爬坑笔记1——背景知识篇</title>
+        <description>&lt;p&gt;这是2019年在给项目做热更框架支持时做的调研笔记，现在重新整理分享出来&lt;/p&gt; &lt;p&gt;ILRuntime是一种C#代码热更新的方案，在学习使用的过程中，不可避免地会碰到很多疑问，比如：直接加载执行Dll，和用ILRuntime来解释Dll，有什么区别？为什么IOS不能直接加载执行Dll？C#编译出来的字节码是怎么被执行的？在寻找答案的过程中，笔者发现需要了解一些背景知识，才能搞懂这些问题，所以先用这篇文章介绍一下相关的背景知识。&lt;/p&gt; &lt;h2 id=&quot;代码是如何被执行的&quot;&gt;&lt;strong&gt;代码是如何被执行的？&lt;/strong&gt;&lt;/h2&gt; &lt;p&gt;所有代码都是这样被执行的：从源代码开始，经过一系列转换（后面展开），最终生成机器码（有时候也叫原生码，或本地码），由CPU执行。&lt;/p&gt; &lt;h3 id=&quot;编译&quot;&gt;编译&lt;/h3&gt; &lt;p&gt;我们把代码的这种转换叫做编译，编译就是把更高层的A语言代码转换为更底层的B语言代码的一种行为。编译产出的其实是另一种语言，并不涉及代码的执行。编译器（Compiler）就是可以执行编译行为的程序。&lt;/p&gt; &lt;p&gt;可以把程序的生命周期分为CompileTime和RunTime。一个程序开始执行，就进入RunTime周期。根据编译的时机是在CompileTime还是RunTime，我们可以分为两种： AOT（Ahead-Of-Time）编译器和JIT（Just-In-Time）编译器，其中的Time，就是指RunTime。&lt;/p&gt; &lt;h3 id=&quot;解释&quot;&gt;解释&lt;/h3&gt; &lt;p&gt;还有一个动词经常和编译一起出现，就是“解释”。解释器（Interpreter）执行代码的过程就叫解释，解释器的作用是，在运行时读取代码并执行。解释器最终会执行代码，但并不规定如何执行代码，可能其中就夹杂着编译的过程（例如JIT）。&lt;/p&gt; &lt;h3 id=&quot;对比&quot;&gt;对比&lt;/h3&gt; &lt;p&gt;虽然从广义来看，解释的概念其实是包括了编译，不过为了方便，后面说的解释都是狭义上的，也就是指执行代码的过程中不包含编译的步骤。&lt;/p&gt; &lt;p&gt;编译的好处，是加快执行代码的速度，简化执行代码的难度。举个栗子，如果不用编译，用纯解释的方式执行代码，就好比只使用最基本的数学/物理公理来解高考题，用到的每条定理都需要从公理推导出来，如果有10道题用了同一个定理，就需要重复推导10次这个定理。执行速度是会很慢，并且实现难度也高。当然解释执行也有好处，就是对开发人员更友好，有更好的跨平台可移植性。&lt;/p&gt; &lt;p&gt;编译器：&lt;/p&gt; &lt;ul&gt; &lt;li&gt;本质是输入代码，输出另一种代码 &lt;ul&gt; &lt;li&gt;一般会分为多层，经过多次转换，最终生成机器码，给CPU执行&lt;/li&gt; &lt;li&gt;JIT、AOT、Full AOT等，是不同的编译策略&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;解释器：&lt;/p&gt; &lt;ul&gt; &lt;li&gt;本质是输入代码，输出结果...</description>
+        <pubDate>Sun, 28 Mar 2021 13:01:45 +0800</pubDate>
+        <link>/unity/ilruntime/2021/03/28/unity-ilruntime1-bg.html</link>
+        <guid isPermaLink="true">/unity/ilruntime/2021/03/28/unity-ilruntime1-bg.html</guid>
+        
+        
+        <category>Unity</category>
+        
+        <category>ILRuntime</category>
+        
+      </item>
+    
+      <item>
+        <title>客户端开发CheckList</title>
+        <description>&lt;p&gt;把项目中经常会碰到的问题，还有需要注意的点，总结出一份CheckList，当作备忘。如果能给予其他人一些帮助，就更好了：）&lt;/p&gt; &lt;p&gt;因为原本是在项目中总结分享给同事的，所以有一些和具体项目相关的条目做了修改或删除。&lt;/p&gt; &lt;h3 id=&quot;自测了吗&quot;&gt;自测了吗？&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;验收/测试用例都通过了吗？&lt;/li&gt; &lt;li&gt;运行过程中是否有报错？&lt;/li&gt; &lt;li&gt;启动时打印的可能没有释放的wnd和没反注册的消息有检查过吗？&lt;/li&gt; &lt;li&gt;Git推送前，检查过所有修改的地方吗？&lt;/li&gt; &lt;li&gt;自测需要关注的有三个部分：执行环境、正在执行任务的类型、执行的操作类型&lt;/li&gt; &lt;li&gt;总的来说完整的自测是要在不同的执行环境下，用不同的操作来执行同一个任务&lt;/li&gt; &lt;li&gt;执行环境一共有这四种： &lt;ul&gt; &lt;li&gt;网速慢&lt;/li&gt; &lt;li&gt;网速快&lt;/li&gt; &lt;li&gt;资源总是回收&lt;/li&gt; &lt;li&gt;资源永不回收&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;下面是操作和任务的类型：&lt;/li&gt; &lt;/ul&gt; &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt; &lt;/th&gt; &lt;th&gt;常规任务&lt;/th&gt; &lt;th&gt;异步任务（Task，协程，线程）&lt;/th&gt; &lt;th&gt;持续任务（动效，音效之类）&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt;...</description>
+        <pubDate>Sun, 28 Mar 2021 09:06:23 +0800</pubDate>
+        <link>/gamedev/2021/03/28/client-checklist.html</link>
+        <guid isPermaLink="true">/gamedev/2021/03/28/client-checklist.html</guid>
+        
+        
+        <category>GameDev</category>
+        
+      </item>
+    
+  </channel>
+</rss>

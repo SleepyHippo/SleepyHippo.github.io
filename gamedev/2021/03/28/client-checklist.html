@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>客户端开发CheckList</title>
+  <meta name="description" content="把项目中经常会碰到的问题，还有需要注意的点，总结出一份CheckList，当作备忘。如果能给予其他人一些帮助，就更好了：）因为原本是在项目中总结分享给同事的，所以有一些和具体项目相关的条目做了修改或删除。">
+  
+  <meta name="author" content="SleepyHippo">
+  <meta name="copyright" content="&copy; SleepyHippo 2021">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="把项目中经常会碰到的问题，还有需要注意的点，总结出一份CheckList，当作备忘。如果能给予其他人一些帮助，就更好了：）因为原本是在项目中总结分享给同事的，所以有一些和具体项目相关的条目做了修改或删除。" />
+  <meta property="og:url" content="/gamedev/2021/03/28/client-checklist.html">
+  <meta property="og:site_name" content="SleepyHippo's blog" />
+  <meta property="og:title" content="客户端开发CheckList" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="客户端开发CheckList">
+  <meta name="twitter:description" content="把项目中经常会碰到的问题，还有需要注意的点，总结出一份CheckList，当作备忘。如果能给予其他人一些帮助，就更好了：）因为原本是在项目中总结分享给同事的，所以有一些和具体项目相关的条目做了修改或删除。">
+  <meta name="twitter:image" content="/assets/logo.png">
+  <meta name="twitter:url" content="/gamedev/2021/03/28/client-checklist.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="/gamedev/2021/03/28/client-checklist.html">
+	<link rel="alternate" type="application/rss+xml" title="SleepyHippo's blog" href="/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.png" alt="SleepyHippo's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">客户端开发CheckList</h1>
+      <p class="info">by <strong></strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">March 28, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/GameDev">Gamedev</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <p>把项目中经常会碰到的问题，还有需要注意的点，总结出一份CheckList，当作备忘。如果能给予其他人一些帮助，就更好了：）</p>
+
+<p>因为原本是在项目中总结分享给同事的，所以有一些和具体项目相关的条目做了修改或删除。</p>
+
+<h3 id="自测了吗">自测了吗？</h3>
+<ul>
+  <li>验收/测试用例都通过了吗？</li>
+  <li>运行过程中是否有报错？</li>
+  <li>启动时打印的可能没有释放的wnd和没反注册的消息有检查过吗？</li>
+  <li>Git推送前，检查过所有修改的地方吗？</li>
+  <li>自测需要关注的有三个部分：执行环境、正在执行任务的类型、执行的操作类型</li>
+  <li>总的来说完整的自测是要在不同的执行环境下，用不同的操作来执行同一个任务</li>
+  <li>执行环境一共有这四种：
+    <ul>
+      <li>网速慢</li>
+      <li>网速快</li>
+      <li>资源总是回收</li>
+      <li>资源永不回收</li>
+    </ul>
+  </li>
+  <li>下面是操作和任务的类型：</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>常规任务</th>
+      <th>异步任务（Task，协程，线程）</th>
+      <th>持续任务（动效，音效之类）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>正常操作</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>快速操作</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>中断操作（如Esc）</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>断线重连</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="未来好调试吗">未来好调试吗？</h3>
+
+<ul>
+  <li>写注释了吗？（类的开头、关键流程、复杂算法、特殊处理、疑难杂症）</li>
+  <li>写调试级别的Log了吗？（有打印开关）</li>
+  <li>写调试用的客户端GM命令了吗？（碰到Bug的时候，可以执行命令打印系统的关键状态）</li>
+  <li>发生一些很不可能发生的错误的时候，有LogError能看出来吗？</li>
+</ul>
+
+<h3 id="有犯一些常见的错误吗">有犯一些常见的错误吗？</h3>
+
+<ul>
+  <li>写空判断了吗？（访问资源，异步回调）</li>
+  <li>参数的异常情况有处理吗？</li>
+  <li>异步任务处理中断的情况了吗？（version或空判断或discard task）</li>
+  <li>异步任务执行的频率是否有必要这么高？（需要每帧执行吗？）</li>
+  <li>构造函数里写逻辑了吗？（无法热更）</li>
+  <li>哪里缓存数据组件了吗？（不要存）</li>
+  <li>哪里缓存别地方创建的容器了吗？（不要clear别人的容器）</li>
+  <li>wnd类里的成员变量，在hideWnd的时候重置了吗？</li>
+  <li>协议回包时组件初始化完了吗？</li>
+  <li>有弹窗的地方，和新手引导、跳转引导、或者其他弹窗会冲突吗？</li>
+  <li>服务器发回来的数据如果不太合理，有报错吗？</li>
+  <li>Git有Revert（还原）别人的提交吗？</li>
+  <li>Unity序列化的变量（Mono或ScriptableObject）改名有加[FormerlySerializedAs]属性吗？</li>
+</ul>
+
+<h3 id="一些开发要求遵循了吗">一些开发要求遵循了吗？</h3>
+
+<ul>
+  <li><strong>设计完整体结构后，有主动找其他同事Review一遍么？</strong></li>
+  <li>命名规范吗？</li>
+  <li>有很多复制粘贴的代码的话，尝试整理了吗？</li>
+  <li>这个修正/优化有单据吗？</li>
+  <li>要实现的业务是否有用公共的组件/方法来做？是否有可能做成通用的组件/方法？</li>
+  <li>开发时碰到的某个Bug，是否其他地方有可能有存在同样的问题？在群里提出来了吗？</li>
+  <li>线上热更提交后，合并回自己的ext分支了吗？</li>
+</ul>
+
+<h3 id="处理兼容了吗">处理兼容了吗？</h3>
+
+<ul>
+  <li>处理兼容的过程中，是否有删除、修改过资源中有配置的东西？或者存到文件、数据库里的东西？</li>
+  <li>已经上线的协议，有修改、删除字段吗？</li>
+  <li>已经上线的协议，新增字段是放在最后吗？</li>
+  <li>修改的枚举名，有在表里配置吗？（Excel存的是string）</li>
+  <li>修改的枚举值，有在UI上配置吗？（UI存的是int）</li>
+  <li>已经上线的本地存档，有修改、删除字段吗？</li>
+  <li>已经上线的本地存档，新增字段是放在最后吗？</li>
+  <li>已经在服务端保存的自定义数据，新增字段是放在最后吗？</li>
+  <li>实现完新功能之后，旧的配表，窗口，数据之类的，在新的代码中还有引用吗？</li>
+</ul>
+
+<h3 id="性能检查了吗">性能检查了吗？</h3>
+
+<ul>
+  <li>用低端机测试了吗？</li>
+  <li>用Profiler跑过自己做的系统了吗？</li>
+  <li>热更的UI，放在正确的ab包里了吗？</li>
+</ul>
+
+<h3 id="每个模块有一些附带的相关的东西有处理吗">每个模块有一些附带的相关的东西有处理吗？</h3>
+
+<ul>
+  <li>红点</li>
+  <li>热更配表</li>
+  <li>埋点</li>
+  <li>性能检查</li>
+</ul>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv"></span>次访问</span>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+      <a href="//twitter.com/share?text=%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BC%80%E5%8F%91CheckList&url=%2Fgamedev%2F2021%2F03%2F28%2Fclient-checklist.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BC%80%E5%8F%91CheckList&u=%2Fgamedev%2F2021%2F03%2F28%2Fclient-checklist.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BC%80%E5%8F%91CheckList&url=%2Fgamedev%2F2021%2F03%2F28%2Fclient-checklist.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BC%80%E5%8F%91CheckList&url=%2Fgamedev%2F2021%2F03%2F28%2Fclient-checklist.html&media=/assets/header_image.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('/gamedev/2021/03/28/client-checklist.html') + '&title=客户端开发CheckList'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">SleepyHippo's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:zkchippo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">zkchippo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://github.com/SleepyHippo" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">SleepyHippo</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

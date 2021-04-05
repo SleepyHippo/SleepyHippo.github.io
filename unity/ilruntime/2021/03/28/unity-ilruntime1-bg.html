@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ILRuntime爬坑笔记1——背景知识篇</title>
+  <meta name="description" content="这是2019年在给项目做热更框架支持时做的调研笔记，现在重新整理分享出来">
+  
+  <meta name="author" content="SleepyHippo">
+  <meta name="copyright" content="&copy; SleepyHippo 2021">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="这是2019年在给项目做热更框架支持时做的调研笔记，现在重新整理分享出来" />
+  <meta property="og:url" content="/unity/ilruntime/2021/03/28/unity-ilruntime1-bg.html">
+  <meta property="og:site_name" content="SleepyHippo's blog" />
+  <meta property="og:title" content="ILRuntime爬坑笔记1——背景知识篇" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ILRuntime爬坑笔记1——背景知识篇">
+  <meta name="twitter:description" content="这是2019年在给项目做热更框架支持时做的调研笔记，现在重新整理分享出来">
+  <meta name="twitter:image" content="/assets/logo.png">
+  <meta name="twitter:url" content="/unity/ilruntime/2021/03/28/unity-ilruntime1-bg.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="/unity/ilruntime/2021/03/28/unity-ilruntime1-bg.html">
+	<link rel="alternate" type="application/rss+xml" title="SleepyHippo's blog" href="/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.png" alt="SleepyHippo's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">ILRuntime爬坑笔记1——背景知识篇</h1>
+      <p class="info">by <strong></strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">March 28, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/Unity">Unity</a>, 
+    
+  
+    
+    <a href="/category/ILRuntime">Ilruntime</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <p>这是2019年在给项目做热更框架支持时做的调研笔记，现在重新整理分享出来</p>
+
+<p>ILRuntime是一种C#代码热更新的方案，在学习使用的过程中，不可避免地会碰到很多疑问，比如：直接加载执行Dll，和用ILRuntime来解释Dll，有什么区别？为什么IOS不能直接加载执行Dll？C#编译出来的字节码是怎么被执行的？在寻找答案的过程中，笔者发现需要了解一些背景知识，才能搞懂这些问题，所以先用这篇文章介绍一下相关的背景知识。</p>
+
+<h2 id="代码是如何被执行的"><strong>代码是如何被执行的？</strong></h2>
+<p>所有代码都是这样被执行的：从源代码开始，经过一系列转换（后面展开），最终生成机器码（有时候也叫原生码，或本地码），由CPU执行。</p>
+
+<h3 id="编译">编译</h3>
+<p>我们把代码的这种转换叫做编译，编译就是把更高层的A语言代码转换为更底层的B语言代码的一种行为。编译产出的其实是另一种语言，并不涉及代码的执行。编译器（Compiler）就是可以执行编译行为的程序。</p>
+
+<p>可以把程序的生命周期分为CompileTime和RunTime。一个程序开始执行，就进入RunTime周期。根据编译的时机是在CompileTime还是RunTime，我们可以分为两种：
+AOT（Ahead-Of-Time）编译器和JIT（Just-In-Time）编译器，其中的Time，就是指RunTime。</p>
+
+<h3 id="解释">解释</h3>
+<p>还有一个动词经常和编译一起出现，就是“解释”。解释器（Interpreter）执行代码的过程就叫解释，解释器的作用是，在运行时读取代码并执行。解释器最终会执行代码，但并不规定如何执行代码，可能其中就夹杂着编译的过程（例如JIT）。</p>
+
+<h3 id="对比">对比</h3>
+<p>虽然从广义来看，解释的概念其实是包括了编译，不过为了方便，后面说的解释都是狭义上的，也就是指执行代码的过程中不包含编译的步骤。</p>
+
+<p>编译的好处，是加快执行代码的速度，简化执行代码的难度。举个栗子，如果不用编译，用纯解释的方式执行代码，就好比只使用最基本的数学/物理公理来解高考题，用到的每条定理都需要从公理推导出来，如果有10道题用了同一个定理，就需要重复推导10次这个定理。执行速度是会很慢，并且实现难度也高。当然解释执行也有好处，就是对开发人员更友好，有更好的跨平台可移植性。</p>
+
+<p>编译器：</p>
+<ul>
+  <li>本质是输入代码，输出另一种代码
+    <ul>
+      <li>一般会分为多层，经过多次转换，最终生成机器码，给CPU执行</li>
+      <li>JIT、AOT、Full AOT等，是不同的编译策略</li>
+    </ul>
+  </li>
+</ul>
+
+<p>解释器：</p>
+<ul>
+  <li>本质是输入代码，输出结果
+    <ul>
+      <li>在程序运行时执行</li>
+      <li>是一个黑箱，内部实现方式不确定，经常也可以用编译的方式来实现</li>
+      <li>不是不需要编译，只是不需要用户显式地使用编译器来得到可执行代码</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="从机器码生成时机的角度来看">从机器码生成时机的角度来看</h3>
+
+<p>最终的机器码可以在CompileTime就生成，或者到RunTime才生成。</p>
+
+<p>如果在CompileTime就生成机器码，这种编译方式叫Full AOT，C、C++的常规运行方式就是这种类型。</p>
+
+<p>如果在RunTime才生成机器码，可以完全使用解释的方式来执行；也可以使用JIT的方式执行，也就是运行时编译后再执行机器码。Javascript，Python，Lua等脚本语言，比较经常会用这两种执行方式。</p>
+
+<p>如果在RunTime生成机器码，RunTime的输入可以是代码，也可以是代码编译过的中间代码，C#和Java就是典型的生成中间代码的例子。这是为了在性能和可移植性中取得一个平衡。在RunTime生成的东西越接近机器码，性能越好，可移植性越差，反之，在RunTime之前完全不生成机器码就等于是纯解释的方式来执行代码，性能最差，但可移植性就越好。（其实可移植性是一个工作量的问题）</p>
+
+<h3 id="参考">参考</h3>
+<ul>
+  <li><a href="http://reimuwang.org/2017/12/11/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E8%A7%A3%E9%87%8A%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">JVM-字节码解释执行引擎</a></li>
+  <li><a href="http://huang-jerryc.com/2016/11/20/do-you-konw-the-different-between-compiler-and-interpreter/">你知道「编译」与「解释」的区别吗？</a></li>
+  <li><a href="https://softwareengineering.stackexchange.com/questions/246094/understanding-the-differences-traditional-interpreter-jit-compiler-jit-interp">Understanding the differences: traditional interpreter, JIT compiler, JIT interpreter and AOT compiler</a></li>
+  <li>https://rednaxelafx.iteye.com/blog/492667</li>
+</ul>
+
+<h2 id="unity代码如何执行的"><strong>Unity代码如何执行的？</strong></h2>
+<p>Unity默认的C#代码，是编译执行的，以前，只有Mono一种编译流程，从Unity4.6.1p5开始，引入了一种新的编译流程IL2CPP。</p>
+
+<h3 id="mono流程"><strong>Mono流程：</strong></h3>
+<p><img src="/assets/images/mono编译流程.png" alt="mono编译流程" /></p>
+
+<p>一句话来说就是：C# 编译成 CIL（dll）字节码，由Mono VM运行
+具体一点，前半部分：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     MonoC#编译器         ILASM编译器                    MonoVM
+C# ---------------&gt; CIL ---------------&gt; CIL字节码  --------------&gt; 结果
+</code></pre></div></div>
+<p>后半部分，Mono VM执行字节码有3种方式：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>运行前</th>
+      <th>运行时</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>JIT（Android、Win、WiiU）</td>
+      <td>无处理</td>
+      <td>逐条读入，逐条解析翻译成机器码交给CPU再执行</td>
+    </tr>
+    <tr>
+      <td>AOT（Unity没有用这种方式）</td>
+      <td>把大部分的CIL，编译成机器码，剩下的走JIT</td>
+      <td>有编译的交给CPU直接执行，没有的走JIT</td>
+    </tr>
+    <tr>
+      <td>Full AOT（IOS平台）</td>
+      <td>把所有的CIL编译成机器码</td>
+      <td>直接执行</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="il2cpp流程"><strong>IL2CPP流程：</strong></h3>
+
+<p><img src="/assets/images/IL2CPP编译流程.png" alt="IL2CPP编译流程" /></p>
+
+<p>一句话来说就是：C# 编译成 CIL，裁剪后，再由il2cpp.exe编译成C++代码，再交给对应平台的编译器，编译成对应平台的机器码，链接上libil2cpp库（IL2CPP VM），然后运行</p>
+
+<p>具体一点：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                                                                                         
+    MonoC#编译器           ILASM编译器                裁剪                     il2cpp.exe(AOT)           不同平台的C++编译器           链接libil2cpp库（IL2CPP VM）
+C# ---------------&gt; CIL ---------------&gt; CIL字节码 --------&gt; 裁剪后的CIL字节码 ---------------&gt; C++代码 ---------------------&gt; 机器码 ----------------------------&gt; 结果
+</code></pre></div></div>
+
+<h3 id="参考-1">参考</h3>
+<ul>
+  <li><a href="https://docs.unity3d.com/Manual/ScriptingRestrictions.html">Unity ScriptingRestrictions</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/19972689">Unity将来时：IL2CPP是什么？</a></li>
+  <li><a href="https://www.mono-project.com/docs/advanced/aot/">Mono的aot</a></li>
+  <li><a href="https://cloud.tencent.com/developer/article/1134387">C#是如何执行的</a></li>
+  <li><a href="https://www.cnblogs.com/zhaoqingqing/p/5762867.html">c# .net mono 版本</a></li>
+  <li><a href="https://www.cnblogs.com/murongxiaopifu/p/4211964.html">Mono为何能跨平台？聊聊CIL(MSIL)</a></li>
+  <li><a href="https://www.cnblogs.com/murongxiaopifu/p/4278947.html">谁偷了我的热更新？Mono，JIT，iOS</a></li>
+</ul>
+
+<h2 id="热更新本质上是什么"><strong>热更新本质上是什么？</strong></h2>
+
+<p>热更本质上是，在运行时，执行新的逻辑。要达到这个目的，实际上有两种方式：</p>
+
+<ul>
+  <li>执行新的机器码
+    <ul>
+      <li>C#的托管Dll：下载dll（字节码），运行时加载，使用Mono的JIT方式编译执行</li>
+      <li>本地（Native）Dll：下载dll（机器码），加载到内存里，执行</li>
+    </ul>
+  </li>
+  <li>按照不同的顺序，执行原有的代码
+    <ul>
+      <li>在Excel、Prefab、ScriptableObject等不同载体上进行配置，更新配置就可以调用不同的代码逻辑分支</li>
+      <li>在语言里，内嵌一个解释器，下载下来的脚本语言，实际上只是按照不同的顺序，调用已经发布出去的代码，
+        <ul>
+          <li>LUA</li>
+          <li>ILRuntime</li>
+          <li>…</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv"></span>次访问</span>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+      <a href="//twitter.com/share?text=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86%E7%AF%87&url=%2Funity%2Filruntime%2F2021%2F03%2F28%2Funity-ilruntime1-bg.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86%E7%AF%87&u=%2Funity%2Filruntime%2F2021%2F03%2F28%2Funity-ilruntime1-bg.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86%E7%AF%87&url=%2Funity%2Filruntime%2F2021%2F03%2F28%2Funity-ilruntime1-bg.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=ILRuntime%E7%88%AC%E5%9D%91%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86%E7%AF%87&url=%2Funity%2Filruntime%2F2021%2F03%2F28%2Funity-ilruntime1-bg.html&media=/assets/header_image.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('/unity/ilruntime/2021/03/28/unity-ilruntime1-bg.html') + '&title=ILRuntime爬坑笔记1——背景知识篇'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">SleepyHippo's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:zkchippo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">zkchippo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://github.com/SleepyHippo" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">SleepyHippo</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>
